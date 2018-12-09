@@ -9,8 +9,7 @@ namespace piledclient
 {
     public static class Program
     {
-        // public const string PiEndpointAddress = "192.168.2.108";
-        public const string PiEndpointAddress = "192.168.2.197";
+        public const string PiEndpointAddress = "192.168.2.108";
         public const int PiPort = 11035;
 
         public static void Main(string[] args)
@@ -20,9 +19,7 @@ namespace piledclient
             Console.WriteLine("press enter to start");
             Console.ReadLine();
 
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-            IPAddress broadcast = IPAddress.Parse(PiEndpointAddress);
+            var conn = new PiConnection(PiEndpointAddress, PiPort);
 
             var colors = new List<RgbColor>
             {
@@ -33,9 +30,7 @@ namespace piledclient
                 RgbColor.Black
             };
 
-            // create just to get width/height
-            var matrix = RgbMatrixFactory.Create();
-            var canvas = new RgbCanvas(matrix.Width, matrix.Height);
+            var canvas = new RgbCanvas(64, 32);
 
             try
             {
@@ -45,15 +40,18 @@ namespace piledclient
                     {
                         CheckForExit();
                         canvas.Fill(color);
-
-                        IPEndPoint ep = new IPEndPoint(broadcast, PiPort);
-                        s.SendTo(canvas.ToBytes(), ep);
+                        conn.SendBytes(canvas.ToBytes());
                         Thread.Sleep(300);
                     }
                 }
             }
             catch (OperationCanceledException)
             {
+            }
+            finally
+            {
+                canvas.Fill(RgbColor.Black);
+                conn.SendBytes(canvas.ToBytes());
             }
         }
 
