@@ -11,7 +11,7 @@ namespace piled
         public static async Task Main(string[] args)
         {
             const int delayCycleMs = 500;
-            const int pixelCycleMs = 15;
+            const int pixelCycleMs = 2;
 
             Console.WriteLine("PILed starting up...");
 
