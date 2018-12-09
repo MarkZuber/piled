@@ -11,7 +11,7 @@ namespace piled
         public static async Task Main(string[] args)
         {
             const int delayCycleMs = 500;
-            const int pixelCycleMs = 2;
+            const int pixelCycleMs = 1;
 
             Console.WriteLine("PILed starting up...");
 
@@ -43,13 +43,27 @@ namespace piled
                             {
                                 for (int y = 0; y < matrix.Height; y++)
                                 {
-                                    for (int x = 0; x < matrix.Width; x++)
+                                    if (y % 2 == 0)
                                     {
-                                        CheckForExit();
+                                        for (int x = 0; x < matrix.Width; x++)
+                                        {
+                                            CheckForExit();
 
-                                        matrix.Clear();
-                                        matrix.SetPixel(x, y, color);
-                                        await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                            matrix.Clear();
+                                            matrix.SetPixel(x, y, color);
+                                            await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int x = matrix.Width - 1; x >= 0; x--)
+                                        {
+                                            CheckForExit();
+
+                                            matrix.Clear();
+                                            matrix.SetPixel(x, y, color);
+                                            await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                        }
                                     }
                                 }
                             }
@@ -59,7 +73,6 @@ namespace piled
             }
             catch (OperationCanceledException)
             {
-
             }
         }
 
