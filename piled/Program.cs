@@ -10,7 +10,8 @@ namespace piled
     {
         public static async Task Main(string[] args)
         {
-            const int delayCycleMs = 1000;
+            const int delayCycleMs = 500;
+            const int pixelCycleMs = 15;
 
             Console.WriteLine("PILed starting up...");
 
@@ -32,13 +33,26 @@ namespace piled
                     {
                         foreach (var color in colors)
                         {
-                            if (Console.KeyAvailable)
-                            {
-                                throw new OperationCanceledException();
-                            }
+                            CheckForExit();
 
                             matrix.Fill(color);
                             await Task.Delay(delayCycleMs).ConfigureAwait(false);
+
+                            // don't do this on black...
+                            if (color.R != 0 || color.G != 0 || color.B != 0)
+                            {
+                                for (int y = 0; y < matrix.Height; y++)
+                                {
+                                    for (int x = 0; x < matrix.Width; x++)
+                                    {
+                                        CheckForExit();
+
+                                        matrix.Clear();
+                                        matrix.SetPixel(x, y, color);
+                                        await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -46,6 +60,14 @@ namespace piled
             catch (OperationCanceledException)
             {
 
+            }
+        }
+
+        private static void CheckForExit()
+        {
+            if (Console.KeyAvailable)
+            {
+                throw new OperationCanceledException();
             }
         }
     }
