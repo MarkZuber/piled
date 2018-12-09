@@ -13,39 +13,42 @@ using rgb_matrix::RGBMatrix;
 
 static GPIO io;
 
-static void* CreateMatrix(uint32_t height, uint32_t cells) {
+// #define EXPORT __attribute__((visibility("default")))
+#define DLL_PUBLIC __attribute__ ((visibility ("default")))
 
+extern "C" DLL_PUBLIC void* CreateMatrix(uint32_t height, uint32_t cells) {
+    io.Init();
     RGBMatrix* matrix = new RGBMatrix(&io, height, cells);
     matrix->Clear();
     return matrix;
 }
 
-static void DeleteMatrix(void* matrix) {
+extern "C" DLL_PUBLIC void DeleteMatrix(void* matrix) {
     RGBMatrix* mat = (RGBMatrix*)matrix;
     delete mat;
     mat = nullptr;
 }
 
-static void ClearMatrix(void* matrix) {
+extern "C" DLL_PUBLIC void ClearMatrix(void* matrix) {
     RGBMatrix* mat = (RGBMatrix*)matrix;
     mat->Clear();
 }
 
-static void FillMatrix(void* matrix, uint8_t r, uint8_t g, uint8_t b) {
+extern "C" DLL_PUBLIC void FillMatrix(void* matrix, uint8_t r, uint8_t g, uint8_t b) {
     RGBMatrix* mat = (RGBMatrix*)matrix;
     mat->Fill(r, g, b);
 }
 
-static void SetMatrixPixel(void* matrix, uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b) {
+extern "C" DLL_PUBLIC void SetMatrixPixel(void* matrix, uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b) {
     RGBMatrix* mat = (RGBMatrix*)matrix;
     mat->SetPixel(x, y, r, g, b);
 }
 
-static void SetMatrixPwmBits(void* matrix, uint8_t bits) {
+extern "C" DLL_PUBLIC void SetMatrixPwmBits(void* matrix, uint8_t bits) {
     RGBMatrix* mat = (RGBMatrix*)matrix;
     mat->SetPWMBits(bits);
 }
 
-static void SetMatrixWriteCycles(void* matrix, uint8_t writeCycles) {
+extern "C" DLL_PUBLIC void SetMatrixWriteCycles(void* matrix, uint8_t writeCycles) {
     io.writeCycles = writeCycles;
 }
