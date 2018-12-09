@@ -38,6 +38,8 @@ namespace piled
                             matrix.Fill(color);
                             await Task.Delay(delayCycleMs).ConfigureAwait(false);
 
+                            matrix.Clear();
+
                             // don't do this on black...
                             if (color.R != 0 || color.G != 0 || color.B != 0)
                             {
