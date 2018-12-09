@@ -8,7 +8,15 @@ namespace piled
     {
         public static IRgbMatrix Create()
         {
-            return new ConsoleRgbMatrix(64, 32);
+            string env = Environment.GetEnvironmentVariable("LOGNAME");
+            if (string.IsNullOrWhiteSpace(env))
+            {
+                return new ConsoleRgbMatrix(64, 32);
+            }
+            else
+            {
+                return new PiRgbMatrix(2);
+            }
         }
     }
 }

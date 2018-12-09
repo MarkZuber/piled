@@ -42,6 +42,46 @@ namespace piled
             }
         }
 
+        public byte[] ToBytes()
+        {
+            byte[] bytes = new byte[Width * Height * 3];
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    int startOffset = ((y * Height) + Width) * 3;
+                    var color = _canvas[x, y];
+                    bytes[startOffset] = color.R;
+                    bytes[startOffset + 1] = color.G;
+                    bytes[startOffset + 2] = color.B;
+                }
+            }
+
+            return bytes;
+        }
+
+        public static RgbCanvas FromBytes(int width, int height, byte[] bytes)
+        {
+            if (width * height * 3 != bytes.Length)
+            {
+                throw new ArgumentException($"width {width} and height {height} and 3 colors per pixel don't match bytes length {bytes.Length}");
+            }
+
+            var canvas = new RgbCanvas(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int startOffset = ((y * height) + width) * 3;
+                    var color = new RgbColor(bytes[startOffset], bytes[startOffset + 1], bytes[startOffset + 2]);
+                    canvas.SetPixel(x, y, color);
+                }
+            }
+
+            return canvas;
+        }
+
         private void ValidateCoordinates(int x, int y)
         {
             if (x < 0 || x >= Width)
