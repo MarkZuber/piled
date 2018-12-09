@@ -7,7 +7,7 @@ namespace piled
 {
     internal static class PiNativeMethods
     {
-        private const string PiDllName = "rpi-rgb-led-matrix";
+        private const string PiDllName = "rgbmatrixnet";
 
         [DllImport(PiDllName)]
         public static extern IntPtr CreateMatrix(int height, int cells);

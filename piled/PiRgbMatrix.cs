@@ -26,18 +26,12 @@ namespace piled
         
         public void Clear()
         {
-            Fill(RgbColor.Black);
+            PiNativeMethods.ClearMatrix(_matrix);
         }
 
         public void Fill(RgbColor color)
         {
-            for (int x = 0; x < Width; x++)
-            {
-                for (int y = 0; y < Height; y++)
-                {
-                    SetPixel(x, y, color);
-                }
-            }
+            PiNativeMethods.FillMatrix(_matrix, color.R, color.G, color.B);
         }
 
         public void SetPixel(int x, int y, RgbColor color)
@@ -61,7 +55,6 @@ namespace piled
                     SetPixel(x, y, canvas.GetPixel(x, y));
                 }
             }
-
         }
 
         public void SetCanvasAt(int x, int y, RgbCanvas canvas)
