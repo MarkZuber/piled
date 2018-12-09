@@ -18,7 +18,6 @@ namespace piled.client
 
         public void Render(RgbCanvas rgbCanvas)
         {
-            Console.WriteLine($"Sending packet... {DateTime.Now.ToShortTimeString()}");
             _piConnection.SendBytes(rgbCanvas.ToBytes());
         }
     }

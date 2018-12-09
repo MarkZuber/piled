@@ -71,19 +71,13 @@ namespace piled.client
 
                 int volHeight = Convert.ToInt32(Convert.ToDouble(Canvas.Height) * max);
 
-                Console.WriteLine($"VolHeight: {volHeight}");
-
                 for (int x = 0; x < volHeight; x++)
                 {
-                    Console.WriteLine($"Drawing {x} as green");
-                    for (int y = 0; y < Canvas.Height; y++)
-                    {
-                        Canvas.SetPixel(x, y, RgbColor.Green);
-                    }
+                    DrawLine(x, RgbColor.Green);
                 }
-                for (int x = volHeight; x < Canvas.Width; x++)
+                DrawLine(volHeight, RgbColor.Red);
+                for (int x = volHeight+1; x < Canvas.Width; x++)
                 {
-                    Console.WriteLine($"Drawing {x} as black");
                     for (int y = 0; y < Canvas.Height; y++)
                     {
                         Canvas.SetPixel(x, y, RgbColor.Black);
@@ -107,6 +101,14 @@ namespace piled.client
                 }
 
                 await Task.Delay(500);
+            }
+        }
+
+        private void DrawLine(int x, RgbColor color)
+        {
+            for (int y = 0; y < Canvas.Height; y++)
+            {
+                Canvas.SetPixel(x, y, color);
             }
         }
     }
