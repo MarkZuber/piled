@@ -8,6 +8,10 @@ namespace piled
     {
         private readonly RgbColor[,] _canvas;
 
+        public RgbCanvas() : this(64, 32)
+        {
+        }
+
         public RgbCanvas(int width, int height)
         {
             Width = width;
@@ -49,7 +53,7 @@ namespace piled
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    int startOffset = ((y * Height) + Width) * 3;
+                    int startOffset = ((y * Height) + x) * 3;
                     var color = _canvas[x, y];
                     bytes[startOffset] = color.R;
                     bytes[startOffset + 1] = color.G;
@@ -73,7 +77,7 @@ namespace piled
             {
                 for (int x = 0; x < width; x++)
                 {
-                    int startOffset = ((y * height) + width) * 3;
+                    int startOffset = ((y * height) + x) * 3;
                     var color = new RgbColor(bytes[startOffset], bytes[startOffset + 1], bytes[startOffset + 2]);
                     canvas.SetPixel(x, y, color);
                 }

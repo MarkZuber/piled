@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using piled;
+using piled.client;
 
 namespace piledclient
 {
@@ -12,54 +14,40 @@ namespace piledclient
         public const string PiEndpointAddress = "192.168.2.108";
         public const int PiPort = 11035;
 
-        public static void Main(string[] args)
+        private static readonly CancellationTokenSource Source = new CancellationTokenSource();
+
+        private static void ReadKeys()
+        {
+            ConsoleKeyInfo key = new ConsoleKeyInfo();
+            while (!Source.IsCancellationRequested && !Console.KeyAvailable && key.Key != ConsoleKey.Enter)
+            {
+                key = Console.ReadKey(true);
+            }
+
+            Source.Cancel();
+        }
+
+        public static async Task Main(string[] args)
         {
             Console.WriteLine("piledclient starting up. ");
 
-            Console.WriteLine("press enter to start");
-            Console.ReadLine();
-
-            var conn = new PiConnection(PiEndpointAddress, PiPort);
-
-            var colors = new List<RgbColor>
-            {
-                RgbColor.White,
-                RgbColor.Green,
-                RgbColor.Red,
-                RgbColor.Blue,
-                RgbColor.Black
-            };
-
-            var canvas = new RgbCanvas(64, 32);
-
             try
             {
-                while (true)
-                {
-                    foreach (var color in colors)
-                    {
-                        CheckForExit();
-                        canvas.Fill(color);
-                        conn.SendBytes(canvas.ToBytes());
-                        Thread.Sleep(300);
-                    }
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            finally
-            {
-                canvas.Fill(RgbColor.Black);
-                conn.SendBytes(canvas.ToBytes());
-            }
-        }
+                //Console.CancelKeyPress += (sender, eventArgs) => { Source.Cancel(); };
+                var taskKeys = new Task(ReadKeys);
+                taskKeys.Start();
 
-        private static void CheckForExit()
-        {
-            if (Console.KeyAvailable)
+                var renderer = new UdpRenderer(PiEndpointAddress, PiPort);
+                // var activity = new SimpleFillDisplayActivity();
+                var activity = new WaveCaptureDisplayActivity();
+                await activity.ExecuteAsync(renderer, Source.Token);
+
+                var tasks = new[] {taskKeys};
+                Task.WaitAll(tasks);
+            }
+            catch (Exception ex)
             {
-                throw new OperationCanceledException();
+                Console.WriteLine(ex);
             }
         }
     }
