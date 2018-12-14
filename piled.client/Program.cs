@@ -39,7 +39,8 @@ namespace piledclient
 
                 var renderer = new UdpRenderer(PiEndpointAddress, PiPort);
                 // var activity = new SimpleFillDisplayActivity();
-                var activity = new WaveCaptureDisplayActivity();
+                // var activity = new WaveCaptureDisplayActivity();
+                var activity = new BounceAndFillDisplayActivity();
                 await activity.ExecuteAsync(renderer, Source.Token);
 
                 var tasks = new[] {taskKeys};

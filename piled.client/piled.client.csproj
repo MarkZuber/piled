@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractDisplayActivity.cs" />
+    <Compile Include="BounceAndFillDisplayActivity.cs" />
     <Compile Include="IDisplayActivity.cs" />
     <Compile Include="IRenderer.cs" />
     <Compile Include="PiConnection.cs" />

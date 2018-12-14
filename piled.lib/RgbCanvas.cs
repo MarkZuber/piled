@@ -53,7 +53,7 @@ namespace piled
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    int startOffset = ((y * Height) + x) * 3;
+                    int startOffset = (y * Width * 3) + (x * 3);
                     var color = _canvas[x, y];
                     bytes[startOffset] = color.R;
                     bytes[startOffset + 1] = color.G;
@@ -77,7 +77,7 @@ namespace piled
             {
                 for (int x = 0; x < width; x++)
                 {
-                    int startOffset = ((y * height) + x) * 3;
+                    int startOffset = (y * width * 3) + (x * 3);
                     var color = new RgbColor(bytes[startOffset], bytes[startOffset + 1], bytes[startOffset + 2]);
                     canvas.SetPixel(x, y, color);
                 }
