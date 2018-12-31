@@ -46,6 +46,26 @@ namespace piled
             }
         }
 
+        public void DrawLineX(int x, RgbColor color, int yStart = 0, int yEnd = -1)
+        {
+            int yFinish = yEnd < 0 ? Height : yEnd;
+
+            for (int y = yStart; y < yFinish; y++)
+            {
+                SetPixel(x, y, color);
+            }
+        }
+
+        public void DrawLineY(int y, RgbColor color, int xStart = 0, int xEnd = -1)
+        {
+            int xFinish = xEnd < 0 ? Width: xEnd;
+
+            for (int x = xStart; x < xFinish; x++)
+            {
+                SetPixel(x, y, color);
+            }
+        }
+
         public byte[] ToBytes()
         {
             byte[] bytes = new byte[Width * Height * 3];

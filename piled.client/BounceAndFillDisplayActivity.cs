@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace piled.client
 {
     public class BounceAndFillDisplayActivity : AbstractDisplayActivity
     {
-        protected override async Task ExecuteAsync()
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var colors = new List<RgbColor>
             {
@@ -30,7 +31,7 @@ namespace piled.client
 
                     Canvas.Fill(color);
                     Render();
-                    await Task.Delay(delayCycleMs).ConfigureAwait(false);
+                    await Task.Delay(delayCycleMs, cancellationToken).ConfigureAwait(false);
 
                     Canvas.Fill(RgbColor.Black);
                     Render();
@@ -51,7 +52,7 @@ namespace piled.client
 
                                     Canvas.SetPixel(x, y, color);
                                     Render();
-                                    await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                    await Task.Delay(pixelCycleMs, cancellationToken).ConfigureAwait(false);
                                 }
                             }
                             else
@@ -64,7 +65,7 @@ namespace piled.client
                                     Render();
                                     Canvas.SetPixel(x, y, color);
                                     Render();
-                                    await Task.Delay(pixelCycleMs).ConfigureAwait(false);
+                                    await Task.Delay(pixelCycleMs, cancellationToken).ConfigureAwait(false);
                                 }
                             }
                         }

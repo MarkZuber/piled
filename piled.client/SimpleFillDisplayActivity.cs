@@ -9,7 +9,7 @@ namespace piled.client
 {
     public class SimpleFillDisplayActivity : AbstractDisplayActivity
     {
-        protected override async Task ExecuteAsync()
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var colors = new List<RgbColor>
             {
@@ -27,7 +27,7 @@ namespace piled.client
                     CheckForExit();
                     Canvas.Fill(color);
                     Render();
-                    await Task.Delay(300);
+                    await Task.Delay(300, cancellationToken).ConfigureAwait(false);
                 }
             }
         }

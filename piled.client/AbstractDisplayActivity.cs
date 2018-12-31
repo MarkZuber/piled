@@ -16,7 +16,7 @@ namespace piled.client
 
         protected RgbCanvas Canvas { get; } = new RgbCanvas();
 
-        protected abstract Task ExecuteAsync();
+        protected abstract Task ExecuteAsync(CancellationToken cancellationToken);
         private CancellationToken _cancellationToken;
         private IRenderer _renderer;
 
@@ -32,15 +32,18 @@ namespace piled.client
 
             try
             {
-                await ExecuteAsync();
+                await ExecuteAsync(_cancellationToken);
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
             }
             finally
             {
                 Canvas.Fill(RgbColor.Black);
-                renderer.Render(Canvas);
+                Render();
+                
+                // Give the network a bit of time to flush the packet before the process exits.
+                await Task.Delay(300);
             }
         }
 
@@ -48,7 +51,7 @@ namespace piled.client
         {
             if (_cancellationToken.IsCancellationRequested)
             {
-                throw new OperationCanceledException();
+                throw new TaskCanceledException();
             }
         }
     }

@@ -39,15 +39,26 @@ namespace piledclient
 
                 var renderer = new UdpRenderer(PiEndpointAddress, PiPort);
                 // var activity = new SimpleFillDisplayActivity();
-                // var activity = new WaveCaptureDisplayActivity();
-                var activity = new BounceAndFillDisplayActivity();
+                // var activity = new WaveVolumeDisplayActivity();
+                // var activity = new BounceAndFillDisplayActivity();
+                var activity = new WaveSpectrumDisplayActivity();
                 await activity.ExecuteAsync(renderer, Source.Token);
 
                 var tasks = new[] {taskKeys};
-                Task.WaitAll(tasks);
+                Task.WaitAll(tasks, Source.Token);
+            }
+            catch (TaskCanceledException)
+            {
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
+                if (ex is TaskCanceledException || ex is OperationCanceledException)
+                {
+                    return;
+                }
                 Console.WriteLine(ex);
             }
         }

@@ -73,7 +73,7 @@ namespace piled
                     }
                 }
             }
-            catch (OperationCanceledException)
+            catch (TaskCanceledException)
             {
             }
         }
@@ -82,7 +82,7 @@ namespace piled
         {
             if (Console.KeyAvailable)
             {
-                throw new OperationCanceledException();
+                throw new TaskCanceledException();
             }
         }
     }
